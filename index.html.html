@@ -1,0 +1,883 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clone Instagram Interativo - Todas as Páginas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Satisfy&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FAFAFA;
+            overscroll-behavior-y: contain;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .instagram-logo-font {
+            font-family: 'Satisfy', cursive;
+            font-size: 1.75rem;
+            line-height: 1;
+        }
+        .action-button-gradient { /* Botão página 1 */
+            background: linear-gradient(to right, #ff8a00, #e52e71);
+        }
+        .next-level-button-gradient { /* Botão página 2 */
+            background: linear-gradient(to right, #8A2BE2, #6A5ACD);
+        }
+        .final-action-button-gradient { /* Botão página 3 */
+             background: linear-gradient(to right, #6D28D9, #4F46E5);
+        }
+        .show-comparison-button-gradient { /* Botão página 4 */
+            background: linear-gradient(to right, #4F46E5, #3B82F6);
+        }
+        .show-receipt-button-gradient { /* Botão página 5 */
+            background: linear-gradient(to right, #A726A9, #7E22CE);
+        }
+        .want-this-now-button-gradient { /* Botão página 6 */
+            background: linear-gradient(to right, #D946EF, #A855F7); 
+        }
+        .build-mine-now-button-gradient { /* Botão página 7 */
+            background: linear-gradient(to right, #EC4899, #D946EF); 
+        }
+        .unlock-access-button-gradient { /* Botão página 8 - VERDE */
+            background: linear-gradient(to right, #22C55E, #16A34A); /* Verde */
+        }
+        ::placeholder { color: #A8A8A8; opacity: 1; }
+        :-ms-input-placeholder { color: #A8A8A8; }
+        ::-ms-input-placeholder { color: #A8A8A8; }
+
+        .verified-badge { color: #3897f0; font-size: 0.8em; margin-left: 4px; }
+
+        .toast-notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: none;
+            animation: fadeInOut 4s ease-in-out;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; top: 0px; }
+            15% { opacity: 1; top: 20px; }
+            85% { opacity: 1; top: 20px; }
+            100% { opacity: 0; top: 0px; }
+        }
+
+        body::-webkit-scrollbar { display: none; }
+        body { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .page-content { display: none; }
+        .page-content.active { display: block; }
+
+        .content-section-wrapper { 
+            background-color: #F0F5FF; 
+            border: 1px solid #E0E7FF; 
+        }
+        .content-section-wrapper-pink { 
+            background-color: #FDF2F8; 
+            border: 1px solid #FBCFE8; 
+        }
+        .content-title {
+            color: #3730A3; 
+            font-size: 1.5rem; 
+            font-weight: 700; 
+            line-height: 1.3;
+            margin-bottom: 1.25rem; 
+            text-align: center;
+        }
+         .content-title-pink { 
+            color: #DB2777; 
+            font-size: 1.625rem; 
+        }
+        .content-paragraph {
+            color: #374151; 
+            font-size: 0.875rem; 
+            font-weight: 400; 
+            line-height: 1.65;
+            margin-bottom: 0.625rem; 
+            text-align: left;
+        }
+         .content-paragraph.centered-conclusion {
+            text-align: center;
+            margin-top: 1.25rem;
+            margin-bottom: 0.25rem;
+            color: #4B5563;
+        }
+         .content-paragraph.final-page-conclusion { 
+            text-align: center;
+            font-weight: 500;
+            color: #C026D3; 
+            margin-top: 1rem;
+         }
+        .content-paragraph.intro {
+             margin-bottom: 1.5rem;
+        }
+        .content-list-item {
+            background-color: #FFFFFF;
+            border-radius: 0.5rem;
+            padding: 0.875rem 1rem;
+            display: flex;
+            align-items: flex-start; 
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            margin-bottom: 0.75rem;
+        }
+        .content-list-item.comparison-traditional {
+            border-left: 4px solid #F87171; 
+            padding-left: 0.75rem; 
+        }
+         .content-list-item.comparison-gamified {
+            border-left: 4px solid #34D399; 
+             padding-left: 0.75rem;
+        }
+        .content-list-icon {
+            font-size: 1.125rem; 
+            margin-right: 0.625rem; 
+            flex-shrink: 0;
+            width: 22px; 
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 0.125rem; 
+        }
+        .content-list-icon svg, .content-list-icon img, .content-list-icon i {
+            width: 100%;
+            height: 100%;
+        }
+        .content-list-text {
+            color: #1F2937;
+            font-size: 0.875rem;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+        .content-list-text .bonus-title {
+            font-weight: 600; 
+            display: block; 
+            margin-bottom: 0.25rem; 
+        }
+        .content-list-text .bonus-description {
+            font-weight: 400; 
+            font-size: 0.8125rem; 
+            color: #4B5563; 
+            line-height: 1.5;
+        }
+        .content-conclusion {
+            color: #3730A3;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-align: center;
+            margin-top: 1.5rem;
+            line-height: 1.6;
+        }
+        .content-conclusion-pink { 
+            color: #DB2777; 
+            font-weight: 500;
+        }
+        .red-x-icon {
+            color: #EF4444;
+            font-size: 1.125rem;
+        }
+        .comparison-title {
+            font-size: 1.125rem; 
+            font-weight: 600; 
+            margin-bottom: 0.75rem; 
+            padding-left: 0.5rem;
+        }
+        .comparison-title.traditional {
+            color: #DC2626; 
+        }
+        .comparison-title.gamified {
+            color: #059669; 
+        }
+        .check-icon-green {
+            color: #10B981; 
+            font-size: 1.25rem; 
+        }
+        .pin-icon { 
+            color: #EC4899; 
+            font-size: 1rem; 
+        }
+        .investment-text { 
+            background-color: #FFF;
+            border: 1px solid #FBCFE8; 
+            border-radius: 0.5rem;
+            padding: 1.25rem; 
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+        .original-price {
+            color: #9CA3AF; 
+            text-decoration: line-through;
+            font-size: 1rem; 
+            margin-bottom: 0.5rem; /* Aumentado espaço para o preço com desconto */
+        }
+        .discounted-price {
+            color: #10B981; 
+            font-size: 1.875rem; 
+            font-weight: 700; 
+            line-height: 1.2;
+        }
+        .urgency-message {
+            font-size: 0.8125rem; 
+            color: #4B5563; 
+            margin-top: 0.75rem; 
+        }
+    </style>
+</head>
+<body class="bg-zinc-50">
+
+    <audio id="dinheiroSound" preload="auto">
+        <source src="dinheiro.mp3" type="audio/mpeg">
+        Seu navegador não suporta o elemento de áudio.
+    </audio>
+
+    <nav class="bg-white border-b border-zinc-300 sticky top-0 z-50">
+        <div class="container mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="instagram-logo-font text-black">Instagram</div>
+            <div class="hidden sm:block w-1/3"><input type="text" placeholder="Pesquisar" class="bg-zinc-100 text-sm rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-1 focus:ring-zinc-400"></div>
+            <div class="flex items-center space-x-4 sm:space-x-5">
+                <span id="balanceDisplay" class="text-red-500 font-semibold text-sm whitespace-nowrap">R$ 0,00</span>
+                <button class="text-zinc-700 relative">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" /></svg>
+                    <span id="notificationBadge" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center" style="display: none;">0</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="toastNotification" class="toast-notification"></div> 
+
+    <main id="page1" class="page-content active container mx-auto px-0 sm:px-4 py-8 max-w-xl">
+        <div class="bg-white border border-zinc-300 rounded-lg">
+            <div class="flex items-center p-4">
+                <img src="https://placehold.co/40x40/6D28D9/FFFFFF?text=MP&font=Inter" alt="Avatar do usuário Marketeiro Pro" class="w-10 h-10 rounded-full mr-3">
+                <span class="font-semibold text-sm">marketeiroPro</span>
+                <button class="ml-auto text-zinc-600"><i class="fas fa-ellipsis-h"></i></button>
+            </div>
+            <div class="content-section-wrapper-pink p-8 text-center m-4 rounded-lg">
+                <h2 class="text-2xl font-bold mb-6" style="color: #E52E71;">Funil com Gamificação</h2>
+                <p class="text-zinc-700 text-sm leading-relaxed mb-3">Você acabou de ativar uma estrutura diferente de tudo que você já viu.</p>
+                <p class="text-zinc-700 text-sm leading-relaxed mb-3">Não clicou numa VSL. Não caiu em promessa de 5 dígitos em 7 dias.</p>
+                <p class="text-zinc-700 text-sm leading-relaxed mb-3">Você entrou num <span class="font-semibold" style="color: #E52E71;">Funil com Gamificação</span> estratégica.</p>
+                <p class="text-zinc-700 text-sm leading-relaxed mb-3">Aqui cada clique seu vira dopamina pro lead. Cada passo seu já é engenharia de conversão.</p>
+                <p class="font-semibold text-md mt-6" style="color: #E52E71;">Você já está jogando sem perceber.</p>
+            </div>
+            <div class="flex justify-between p-4">
+                <div class="flex space-x-4">
+                    <button class="text-zinc-700"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg></button>
+                    <button class="text-zinc-700"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" /></svg></button>
+                    <button class="text-zinc-700"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg></button>
+                </div>
+                <button class="text-zinc-700"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.5 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
+            </div>
+            <div class="px-4 pb-2"><span class="font-semibold text-sm">42 curtidas</span></div>
+            <div class="px-4 pb-4">
+                <p class="text-sm"><span class="font-semibold">marketeiroPro</span> Digite seu Instagram para continuar:</p>
+                <span class="text-xs text-zinc-500 uppercase">HÁ 2 HORAS</span>
+            </div>
+            <div class="border-t border-zinc-200 px-4 py-3"><input type="text" placeholder="marketeiroPro" value="marketeiroPro" class="bg-zinc-100 text-sm rounded-lg px-4 py-3 w-full focus:outline-none focus:ring-1 focus:ring-zinc-400 placeholder-zinc-400"></div>
+            <div class="px-4 pb-4 pt-1"><button id="startGameButton" class="w-full action-button-gradient text-white font-semibold py-3 rounded-lg text-sm hover:opacity-90 transition-opacity">Começar a operação</button></div>
+            <div class="px-4 pb-4 border-t border-zinc-200 pt-4">
+                <div class="space-y-2 text-sm">
+                    <div><span class="font-semibold">thiagofinch</span><svg class="inline-block w-4 h-4 verified-badge" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.707 8.707l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L10 13.586l4.293-4.293a1 1 0 011.414 1.414z"></path></svg><span class="text-zinc-600"> Aperta 1 padrão outlier</span> 👍</div>
+                    <div><span class="font-semibold">ruyter</span><svg class="inline-block w-4 h-4 verified-badge" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.707 8.707l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L10 13.586l4.293-4.293a1 1 0 011.414 1.414z"></path></svg><span class="text-zinc-600"> caralho menor, amassou!</span> 🔥</div>
+                    <div><span class="font-semibold">jonbenson</span><svg class="inline-block w-4 h-4 verified-badge" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.707 8.707l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L10 13.586l4.293-4.293a1 1 0 011.414 1.414z"></path></svg><span class="text-zinc-600"> Brilliant funnel structure!</span> ✨</div>
+                </div>
+                <button class="text-zinc-500 text-sm mt-2">Ver todos os 15 comentários</button>
+            </div>
+        </div>
+    </main>
+
+    <main id="page2" class="page-content container mx-auto px-0 sm:px-4 py-8 max-w-xl">
+         <div class="bg-white border border-zinc-300 rounded-lg">
+            <div class="flex items-center p-4">
+                <img src="https://placehold.co/40x40/6D28D9/FFFFFF?text=MP&font=Inter" alt="Avatar do usuário Marketeiro Pro" class="w-10 h-10 rounded-full mr-3">
+                <span class="font-semibold text-sm">marketeiroPro</span>
+                <button class="ml-auto text-zinc-600"><i class="fas fa-ellipsis-h"></i></button>
+            </div>
+            <div class="content-section-wrapper p-6 sm:p-8 m-4 rounded-lg">
+                <h2 class="content-title">Para quem é esse funil?</h2>
+                <p class="content-paragraph">Esse funil é pra quem cansou de bater cabeça investindo em tráfego.</p>
+                <p class="content-paragraph">Pra quem lançou produto barato e ficou no prejuízo.</p>
+                <p class="content-paragraph intro">Pra quem já testou VSL, fórmula mágica e ainda vive de esperança achando que vai escalar.</p>
+                <ul class="list-none p-0 m-0">
+                    <li class="content-list-item">
+                        <span class="content-list-icon">🎇</span>
+                        <span class="content-list-text">Cansou de 1.5 de ROI no máximo (se tiver ROI kkk)</span>
+                    </li>
+                    <li class="content-list-item">
+                        <span class="content-list-icon">🎯</span>
+                        <span class="content-list-text">Quer escalar sem precisar ficar produzindo conteúdo</span>
+                    </li>
+                    <li class="content-list-item">
+                        <span class="content-list-icon">
+                             <svg viewBox="0 0 640 512" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M128 64c0-17.7 14.3-32 32-32s32 14.3 32 32s-14.3 32-32 32s-32-14.3-32-32zm448 0c0-17.7 14.3-32 32-32s32 14.3 32 32s-14.3 32-32 32s-32-14.3-32-32zM23.9 223.4c-14.4-3.2-28.3-2.6-41.9 1.6C-31.3 229.9-40 246.9-40 264c0 35.3 28.7 64 64 64H576c17.7 0 32-14.3 32-32s-14.3-32-32-32H241.2c-10.6-24.9-25.1-47.6-43.1-66.9L176 192H160l-22.7 19.8c-10.7-4.8-22.1-8.3-33.4-10.4zM64 384c-17.7 0-32 14.3-32 32s14.3 32 32 32H576c17.7 0 32-14.3 32-32s-14.3-32-32-32H64z"/></svg>
+                        </span>
+                        <span class="content-list-text">Deseja faturar enquanto assiste Netflix (Ou surfa no XavierVideos)</span>
+                    </li>
+                    <li class="content-list-item">
+                        <span class="content-list-icon">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <defs><linearGradient id="msgGradientP2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#E9A8F0;stop-opacity:1" /><stop offset="100%" style="stop-color:#BE77E0;stop-opacity:1" /></linearGradient></defs>
+                                <path fill="url(#msgGradientP2)" d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+                            </svg>
+                        </span>
+                        <span class="content-list-text">Não aguenta mais lead frio e CTA ignorada</span>
+                    </li>
+                </ul>
+                <p class="content-conclusion">Esse é o jogo de quem quer retorno rápido com estrutura leve, invisível e que vende no automático.</p>
+            </div>
+            <div class="flex justify-between p-4">
+                 <div class="flex space-x-4">
+                    <button class="text-zinc-700"><svg fill="rgb(239 68 68)" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg></button>
+                    <button class="text-zinc-700"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" /></svg></button>
+                    <button class="text-zinc-700"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg></button>
+                </div>
+                <button class="text-zinc-700"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.5 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
+            </div>
+             <div class="px-4 pb-2"><span class="font-semibold text-sm">87 curtidas</span><p class="text-xs text-zinc-500">Curtido por <span class="font-semibold text-zinc-800">thiagofinch</span> e <span class="font-semibold text-zinc-800">outras 1 pessoas</span></p></div>
+            <div class="px-4 pb-4"><p class="text-sm"><span class="font-semibold">marketeiroPro</span> Esse funil é pra quem cansou de bater cabeça investindo em tráfego.</p><span class="text-xs text-zinc-500 uppercase">HÁ 1 HORA</span></div>
+            <div class="px-4 pb-4 pt-1 border-t border-zinc-200"><button id="nextLevelButton" class="w-full next-level-button-gradient text-white font-semibold py-3 rounded-lg text-sm hover:opacity-90 transition-opacity mt-3">Próximo nível</button></div>
+            <div class="px-4 pb-4 border-t border-zinc-200 pt-4">
+                <div class="space-y-2 text-sm">
+                     <div><span class="font-semibold">thiagofinch</span><svg class="inline-block w-4 h-4 verified-badge" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.707 8.707l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L10 13.586l4.293-4.293a1 1 0 011.414 1.414z"></path></svg><span class="text-zinc-600"> maconheiro esperto carakkk</span></div>
+                    <div><span class="font-semibold">ruyter</span><svg class="inline-block w-4 h-4 verified-badge" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.707 8.707l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L10 13.586l4.293-4.293a1 1 0 011.414 1.414z"></path></svg><span class="text-zinc-600"> Explanou como os cassinos me deixaram mais rico...</span></div>
+                    <div><span class="font-semibold">jonbenson</span><svg class="inline-block w-4 h-4 verified-badge" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.707 8.707l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L10 13.586l4.293-4.293a1 1 0 011.414 1.414z"></path></svg><span class="text-zinc-600"> This is exactly what I teach my students!</span></div>
+                </div>
+                <button class="text-zinc-500 text-sm mt-2">Ver todos os 15 comentários</button>
+            </div>
+        </div>
+    </main>
+
+    <main id="page3" class="page-content container mx-auto px-0 sm:px-4 py-8 max-w-xl">
+        <div class="bg-white border border-zinc-300 rounded-lg">
+            <div class="flex items-center p-4">
+                <img src="https://placehold.co/40x40/6D28D9/FFFFFF?text=MP&font=Inter" alt="Avatar do usuário Marketeiro Pro" class="w-10 h-10 rounded-full mr-3">
+                <span class="font-semibold text-sm">marketeiroPro</span>
+                <button class="ml-auto text-zinc-600"><i class="fas fa-ellipsis-h"></i></button>
+            </div>
+            <div class="content-section-wrapper p-6 sm:p-8 m-4 rounded-lg">
+                <h2 class="content-title">Você não vai precisar dessas merdas aqui:</h2>
+                <ul class="list-none p-0 m-0 mt-6">
+                    <li class="content-list-item">
+                        <span class="content-list-icon red-x-icon"><i class="fas fa-times-circle"></i></span>
+                        <span class="content-list-text">Aparecer ou criar conteúdo todo dia</span>
+                    </li>
+                    <li class="content-list-item">
+                        <span class="content-list-icon red-x-icon"><i class="fas fa-times-circle"></i></span>
+                        <span class="content-list-text">Inventar oferta mirabolante pra convencer o lead</span>
+                    </li>
+                    <li class="content-list-item">
+                        <span class="content-list-icon red-x-icon"><i class="fas fa-times-circle"></i></span>
+                        <span class="content-list-text">Se frustrar com VSL que não engaja ou que não vende</span>
+                    </li>
+                    <li class="content-list-item">
+                        <span class="content-list-icon red-x-icon"><i class="fas fa-times-circle"></i></span>
+                        <span class="content-list-text">Tentar método que só funciona com guru que já tem grana</span>
+                    </li>
+                    <li class="content-list-item">
+                        <span class="content-list-icon red-x-icon"><i class="fas fa-times-circle"></i></span>
+                        <span class="content-list-text">Ficar ansioso esperando cair notificação de venda</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="flex justify-between p-4">
+                 <div class="flex space-x-4">
+                    <button class="text-zinc-700"><svg fill="rgb(239 68 68)" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg></button>
+                    <button class="text-zinc-700"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" /></svg></button>
+                    <button class="text-zinc-700"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg></button>
+                </div>
+                <button class="text-zinc-700"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.5 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
+            </div>
+             <div class="px-4 pb-2"><span class="font-semibold text-sm">124 curtidas</span><p class="text-xs text-zinc-500">Curtido por <span class="font-semibold text-zinc-800">thiagofinch</span> e <span class="font-semibold text-zinc-800">outras 2 pessoas</span></p></div>
+            <div class="px-4 pb-4"><p class="text-sm"><span class="font-semibold">marketeiroPro</span> Você não vai precisar dessas merdas aqui...</p><span class="text-xs text-zinc-500 uppercase">HÁ 45 MINUTOS</span></div>
+            <div class="px-4 pb-4 pt-1 border-t border-zinc-200"><button id="seeHowItWorksButton" class="w-full final-action-button-gradient text-white font-semibold py-3 rounded-lg text-sm hover:opacity-90 transition-opacity mt-3">Quero ver como isso funciona</button></div>
+            <div class="px-4 pb-4 border-t border-zinc-200 pt-4">
+                <div class="space-y-2 text-sm">
+                     <div><span class="font-semibold">thiagofinch</span><svg class="inline-block w-4 h-4 verified-badge" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.707 8.707l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L10 13.586l4.293-4.293a1 1 0 011.414 1.414z"></path></svg><span class="text-zinc-600"> Tem bobo que ainda acredita nas minhas dicas de VSL 🤡</span></div>
+                    <div><span class="font-semibold">ruyter</span><svg class="inline-block w-4 h-4 verified-badge" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.707 8.707l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L10 13.586l4.293-4.293a1 1 0 011.414 1.414z"></path></svg><span class="text-zinc-600"> tira o passaporte pq eu quero vc aqui! ✈️</span></div>
+                    <div><span class="font-semibold">jonbenson</span><svg class="inline-block w-4 h-4 verified-badge" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.707 8.707l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L10 13.586l4.293-4.293a1 1 0 011.414 1.414z"></path></svg><span class="text-zinc-600"> The future of marketing is engagement, not just eyeballs 💡</span></div>
+                </div>
+                <button class="text-zinc-500 text-sm mt-2">Ver todos os 29 comentários</button>
+            </div>
+        </div>
+    </main>
+
+    <main id="page4" class="page-content container mx-auto px-0 sm:px-4 py-8 max-w-xl">
+        <div class="bg-white border border-zinc-300 rounded-lg">
+            <div class="flex items-center p-4">
+                <img src="https://placehold.co/40x40/6D28D9/FFFFFF?text=MP&font=Inter" alt="Avatar do usuário Marketeiro Pro" class="w-10 h-10 rounded-full mr-3">
+                <span class="font-semibold text-sm">marketeiroPro</span>
+                <button class="ml-auto text-zinc-600"><i class="fas fa-ellipsis-h"></i></button>
+            </div>
+            <div class="content-section-wrapper p-6 sm:p-8 m-4 rounded-lg">
+                <h2 class="content-title">Por que essa estrutura converte tanto?</h2>
+                <p class="content-paragraph intro text-center">Porque ativa os 3 gatilhos que o nosso cérebro mais ama:</p>
+                <ul class="list-none p-0 m-0">
+                    <li class="content-list-item">
+                        <span class="content-list-icon">🧩</span>
+                        <span class="content-list-text">Progresso</span>
+                    </li>
+                    <li class="content-list-item">
+                        <span class="content-list-icon">🏆</span>
+                        <span class="content-list-text">Microvitórias</span>
+                    </li>
+                    <li class="content-list-item">
+                        <span class="content-list-icon">🎮</span>
+                        <span class="content-list-text">Curiosidade contínua</span>
+                    </li>
+                </ul>
+                <p class="content-paragraph centered-conclusion">O lead não sente que está sendo vendido. Ele sente que está avançando no jogo.</p>
+                <p class="content-paragraph centered-conclusion" style="margin-top: 0.5rem;">E quanto mais ele avança... mais ele quer pagar pra chegar até o fim.</p>
+            </div>
+            <div class="flex justify-between p-4">
+                 <div class="flex space-x-4">
+                    <button class="text-zinc-700"><svg fill="rgb(239 68 68)" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg></button>
+                    <button class="text-zinc-700"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" /></svg></button>
+                    <button class="text-zinc-700"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg></button>
+                </div>
+                <button class="text-zinc-700"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.5 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
+            </div>
+             <div class="px-4 pb-2"><span class="font-semibold text-sm">156 curtidas</span><p class="text-xs text-zinc-500">Curtido por <span class="font-semibold text-zinc-800">thiagofinch</span> e <span class="font-semibold text-zinc-800">outras 3 pessoas</span></p></div>
+            <div class="px-4 pb-4"><p class="text-sm"><span class="font-semibold">marketeiroPro</span> Por que essa estrutura converte tanto?</p><span class="text-xs text-zinc-500 uppercase">HÁ 30 MINUTOS</span></div>
+            <div class="px-4 pb-4 pt-1 border-t border-zinc-200"><button id="showRealComparisonButton" class="w-full show-comparison-button-gradient text-white font-semibold py-3 rounded-lg text-sm hover:opacity-90 transition-opacity mt-3">Mostrar comparação real</button></div>
+            <div class="px-4 pb-4 border-t border-zinc-200 pt-4">
+                <div class="space-y-2 text-sm">
+                     <div><span class="font-semibold">thiagofinch</span><svg class="inline-block w-4 h-4 verified-badge" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.707 8.707l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L10 13.586l4.293-4.293a1 1 0 011.414 1.414z"></path></svg><span class="text-zinc-600"> subiu o nível do negócio...</span></div>
+                    <div><span class="font-semibold">ruyter</span><svg class="inline-block w-4 h-4 verified-badge" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.707 8.707l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L10 13.586l4.293-4.293a1 1 0 011.414 1.414z"></path></svg><span class="text-zinc-600"> vc precisa ser estudado pela nasa</span></div>
+                    <div><span class="font-semibold">jonbenson</span><svg class="inline-block w-4 h-4 verified-badge" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.707 8.707l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L10 13.586l4.293-4.293a1 1 0 011.414 1.414z"></path></svg><span class="text-zinc-600"> The psychology behind this is spot on! 🧠</span></div>
+                </div>
+                <button class="text-zinc-500 text-sm mt-2">Ver todos os 29 comentários</button>
+            </div>
+        </div>
+    </main>
+
+    <main id="page5" class="page-content container mx-auto px-0 sm:px-4 py-8 max-w-xl">
+        <div class="bg-white border border-zinc-300 rounded-lg">
+            <div class="flex items-center p-4">
+                <img src="https://placehold.co/40x40/6D28D9/FFFFFF?text=MP&font=Inter" alt="Avatar do usuário Marketeiro Pro" class="w-10 h-10 rounded-full mr-3">
+                <span class="font-semibold text-sm">marketeiroPro</span>
+                <button class="ml-auto text-zinc-600"><i class="fas fa-ellipsis-h"></i></button>
+            </div>
+            <div class="content-section-wrapper p-6 sm:p-8 m-4 rounded-lg">
+                <h2 class="content-title" style="font-size: 1.625rem; color: #8B5CF6;">🌟 Comparação fudida</h2>
+                <p class="content-paragraph intro text-center" style="margin-bottom: 1.75rem;">A diferença entre os funis tradicionais e a nova onda de gamificação:</p>
+                
+                <div class="mb-6">
+                    <h3 class="comparison-title traditional">❌ Tradicional</h3>
+                    <ul class="list-none p-0 m-0 space-y-2">
+                        <li class="content-list-item comparison-traditional"><span class="content-list-icon">🎬</span><span class="content-list-text">VSL chata pra krlh</span></li>
+                        <li class="content-list-item comparison-traditional"><span class="content-list-icon">💰</span><span class="content-list-text">Promessa + botão</span></li>
+                        <li class="content-list-item comparison-traditional"><span class="content-list-icon">📖</span><span class="content-list-text">Storytelling forçado</span></li>
+                        <li class="content-list-item comparison-traditional"><span class="content-list-icon">📋</span><span class="content-list-text">Copy decorada</span></li>
+                        <li class="content-list-item comparison-traditional"><span class="content-list-icon">🥶</span><span class="content-list-text">Lead caro e frio</span></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="comparison-title gamified">🔥 Estrutura Gamificada</h3>
+                    <ul class="list-none p-0 m-0 space-y-2">
+                        <li class="content-list-item comparison-gamified"><span class="content-list-icon">🧱</span><span class="content-list-text">Blocos curtos e viciantes</span></li>
+                        <li class="content-list-item comparison-gamified"><span class="content-list-icon">✨</span><span class="content-list-text">Progresso + descoberta</span></li>
+                        <li class="content-list-item comparison-gamified"><span class="content-list-icon">🎢</span><span class="content-list-text">Jornada emocional real</span></li>
+                        <li class="content-list-item comparison-gamified"><span class="content-list-icon">🎮</span><span class="content-list-text">Engajamento prático</span></li>
+                        <li class="content-list-item comparison-gamified"><span class="content-list-icon">💖</span><span class="content-list-text">Lead quente e envolvido</span></li>
+                    </ul>
+                </div>
+                <p class="content-paragraph centered-conclusion" style="margin-top: 2rem; color: #4338CA; font-weight: 500;">No final, o lead nem sabe que tá num funil. Ele só sente que precisa pagar porque avançou demais.</p>
+            </div>
+            <div class="flex justify-between p-4">
+                 <div class="flex space-x-4">
+                    <button class="text-zinc-700"><svg fill="rgb(239 68 68)" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg></button>
+                    <button class="text-zinc-700"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" /></svg></button>
+                    <button class="text-zinc-700"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg></button>
+                </div>
+                <button class="text-zinc-700"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.5 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
+            </div>
+             <div class="px-4 pb-2"><span class="font-semibold text-sm">203 curtidas</span><p class="text-xs text-zinc-500">Curtido por <span class="font-semibold text-zinc-800">thiagofinch</span> e <span class="font-semibold text-zinc-800">outras 4 pessoas</span></p></div>
+            <div class="px-4 pb-4"><p class="text-sm"><span class="font-semibold">marketeiroPro</span> Comparação entre funis tradicionais e gamificados 🔥</p><span class="text-xs text-zinc-500 uppercase">HÁ 20 MINUTOS</span></div>
+            <div class="px-4 pb-4 pt-1 border-t border-zinc-200"><button id="showWhatIReceiveButton" class="w-full show-receipt-button-gradient text-white font-semibold py-3 rounded-lg text-sm hover:opacity-90 transition-opacity mt-3">Mostrar o que eu recebo</button></div>
+            <div class="px-4 pb-4 border-t border-zinc-200 pt-4">
+                <div class="space-y-2 text-sm">
+                     <div><span class="font-semibold">thiagofinch</span><svg class="inline-block w-4 h-4 verified-badge" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.707 8.707l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L10 13.586l4.293-4.293a1 1 0 011.414 1.414z"></path></svg><span class="text-zinc-600"> Essa comparação é cirúrgica! 🎯</span></div>
+                    <div><span class="font-semibold">ruyter</span><svg class="inline-block w-4 h-4 verified-badge" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.707 8.707l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L10 13.586l4.293-4.293a1 1 0 011.414 1.414z"></path></svg><span class="text-zinc-600"> Quem ainda usa funil tradicional tá perdendo dinheiro</span></div>
+                    <div><span class="font-semibold">jonbenson</span><svg class="inline-block w-4 h-4 verified-badge" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.707 8.707l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L10 13.586l4.293-4.293a1 1 0 011.414 1.414z"></path></svg><span class="text-zinc-600"> I've been saying this for years! Traditional funnels are dying.</span></div>
+                </div>
+                <button class="text-zinc-500 text-sm mt-2">Ver todos os 28 comentários</button>
+            </div>
+        </div>
+    </main>
+
+    <main id="page6" class="page-content container mx-auto px-0 sm:px-4 py-8 max-w-xl">
+        <div class="bg-white border border-zinc-300 rounded-lg">
+            <div class="flex items-center p-4">
+                <img src="https://placehold.co/40x40/6D28D9/FFFFFF?text=MP&font=Inter" alt="Avatar do usuário Marketeiro Pro" class="w-10 h-10 rounded-full mr-3">
+                <span class="font-semibold text-sm">marketeiroPro</span>
+                <button class="ml-auto text-zinc-600"><i class="fas fa-ellipsis-h"></i></button>
+            </div>
+            <div class="content-section-wrapper-pink p-6 sm:p-8 m-4 rounded-lg">
+                <h2 class="content-title content-title-pink">🎁 O que você recebe</h2>
+                <p class="content-paragraph text-center" style="margin-top: 0.5rem; margin-bottom: 1.5rem;">Você não vai ganhar um PDF com teoria. Vai dominar um método que eu estou aplicando pra conseguir escalar no Direct Response.</p>
+                
+                <ul class="list-none p-0 m-0 space-y-3">
+                    <li class="content-list-item">
+                        <span class="content-list-icon"><i class="fas fa-check-circle check-icon-green"></i></span>
+                        <div class="content-list-text">
+                            <span class="bonus-title">📘 Guia completo da nova onda</span>
+                            <span class="bonus-description">Entenda como funis invisíveis estão substituindo as VSLs tradicionais e virando padrão nas estruturas modernas.</span>
+                        </div>
+                    </li>
+                    <li class="content-list-item">
+                        <span class="content-list-icon"><i class="fas fa-check-circle check-icon-green"></i></span>
+                        <div class="content-list-text">
+                            <span class="bonus-title">🧠 Prompts, ferramentas e hacks gratuitos</span>
+                            <span class="bonus-description">Tudo o que uso para montar páginas, automações e gatilhos sem saber programar. Só colar e usar.</span>
+                        </div>
+                    </li>
+                    <li class="content-list-item">
+                        <span class="content-list-icon"><i class="fas fa-check-circle check-icon-green"></i></span>
+                        <div class="content-list-text">
+                            <span class="bonus-title">🎯 Mini-treinamento: Como transformar um PDF em uma máquina de vendas</span>
+                            <span class="bonus-description">Aprenda em poucos minutos a deixar qualquer conteúdo com cara de produto irresistível e lucrativo.</span>
+                        </div>
+                    </li>
+                </ul>
+                <p class="content-paragraph text-center content-conclusion-pink" style="margin-top: 2rem;">Quer entender como montar o seu do zero com o ChatGPT?</p>
+            </div>
+            <div class="flex justify-between p-4">
+                 <div class="flex space-x-4">
+                    <button class="text-zinc-700"><svg fill="rgb(239 68 68)" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg></button>
+                    <button class="text-zinc-700"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" /></svg></button>
+                    <button class="text-zinc-700"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg></button>
+                </div>
+                <button class="text-zinc-700"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.5 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
+            </div>
+             <div class="px-4 pb-2"><span class="font-semibold text-sm">278 curtidas</span><p class="text-xs text-zinc-500">Curtido por <span class="font-semibold text-zinc-800">thiagofinch</span> e <span class="font-semibold text-zinc-800">outras 5 pessoas</span></p></div>
+            <div class="px-4 pb-4"><p class="text-sm"><span class="font-semibold">marketeiroPro</span> Veja o que você vai receber nesse método...</p><span class="text-xs text-zinc-500 uppercase">HÁ 15 MINUTOS</span></div>
+            <div class="px-4 pb-4 pt-1 border-t border-zinc-200"><button id="wantThisNowButton" class="w-full want-this-now-button-gradient text-white font-semibold py-3 rounded-lg text-sm hover:opacity-90 transition-opacity mt-3">Sim, quero isso agora</button></div>
+            <div class="px-4 pb-4 border-t border-zinc-200 pt-4">
+                <div class="space-y-2 text-sm">
+                     <div><span class="font-semibold">thiagofinch</span><svg class="inline-block w-4 h-4 verified-badge" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.707 8.707l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L10 13.586l4.293-4.293a1 1 0 011.414 1.414z"></path></svg><span class="text-zinc-600"> O grupo de WPP é o melhor que já participei</span></div>
+                    <div><span class="font-semibold">ruyter</span><svg class="inline-block w-4 h-4 verified-badge" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.707 8.707l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L10 13.586l4.293-4.293a1 1 0 011.414 1.414z"></path></svg><span class="text-zinc-600"> recomenda a Kirvano la no grupo pfvrrr eu imploro</span></div>
+                    <div><span class="font-semibold">jonbenson</span><svg class="inline-block w-4 h-4 verified-badge" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.707 8.707l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L10 13.586l4.293-4.293a1 1 0 011.414 1.414z"></path></svg><span class="text-zinc-600"> The community aspect is what makes this so valuable</span></div>
+                </div>
+                <button class="text-zinc-500 text-sm mt-2">Ver todos os 21 comentários</button>
+            </div>
+        </div>
+    </main>
+
+    <main id="page7" class="page-content container mx-auto px-0 sm:px-4 py-8 max-w-xl">
+        <div class="bg-white border border-zinc-300 rounded-lg">
+            <div class="flex items-center p-4">
+                <img src="https://placehold.co/40x40/6D28D9/FFFFFF?text=MP&font=Inter" alt="Avatar do usuário Marketeiro Pro" class="w-10 h-10 rounded-full mr-3">
+                <span class="font-semibold text-sm">marketeiroPro</span>
+                <button class="ml-auto text-zinc-600"><i class="fas fa-ellipsis-h"></i></button>
+            </div>
+            <div class="content-section-wrapper-pink p-6 sm:p-8 m-4 rounded-lg">
+                <h2 class="content-title content-title-pink" style="font-size: 1.75rem;">Você já entendeu o game</h2>
+                <p class="content-paragraph text-center" style="margin-top: 0.5rem; margin-bottom: 1.25rem; color: #4B5563;">Se você chegou até aqui... já tá entendendo como funciona o game</p>
+                <p class="content-paragraph text-center" style="margin-bottom: 1.75rem; color: #4B5563;">Você não foi convencido. Foi conduzido pelas etapas.</p>
+                
+                <ul class="list-none p-0 m-0 space-y-3">
+                    <li class="content-list-item">
+                        <span class="content-list-icon pin-icon"><i class="fas fa-thumbtack fa-rotate-by" style="--fa-rotate-angle: -45deg;"></i></span>
+                        <span class="content-list-text" style="font-weight: 400;">Não teve VSL chata pra assistir</span>
+                    </li>
+                    <li class="content-list-item">
+                        <span class="content-list-icon pin-icon"><i class="fas fa-thumbtack fa-rotate-by" style="--fa-rotate-angle: -45deg;"></i></span>
+                        <span class="content-list-text" style="font-weight: 400;">Não teve promessa apelativa</span>
+                    </li>
+                    <li class="content-list-item">
+                        <span class="content-list-icon pin-icon"><i class="fas fa-thumbtack fa-rotate-by" style="--fa-rotate-angle: -45deg;"></i></span>
+                        <span class="content-list-text" style="font-weight: 400;">E mesmo assim... você avançou sem esforço</span>
+                    </li>
+                </ul>
+                <p class="content-paragraph final-page-conclusion" style="margin-top: 2rem;">Essa estrutura não tenta vender.</p>
+                <p class="content-paragraph final-page-conclusion" style="font-weight: 700; margin-top: 0.25rem;">Ela guia o lead a querer pagar.</p>
+                <p class="content-paragraph text-center" style="margin-top: 1.75rem; color: #4B5563; font-size: 0.875rem;">Agora imagine aplicar isso na sua estrutura, usando o ChatGPT como braço direito pra fazer tudo.</p>
+            </div>
+
+            <div class="flex justify-between p-4">
+                 <div class="flex space-x-4">
+                    <button class="text-zinc-700"><svg fill="rgb(239 68 68)" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg></button>
+                    <button class="text-zinc-700"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" /></svg></button>
+                    <button class="text-zinc-700"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg></button>
+                </div>
+                <button class="text-zinc-700"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.5 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
+            </div>
+             <div class="px-4 pb-2">
+                <span class="font-semibold text-sm">342 curtidas</span>
+                <p class="text-xs text-zinc-500">Curtido por <span class="font-semibold text-zinc-800">thiagofinch</span> e <span class="font-semibold text-zinc-800">outras 6 pessoas</span></p>
+            </div>
+            <div class="px-4 pb-4">
+                <p class="text-sm"><span class="font-semibold">marketeiroPro</span> Se você chegou até aqui... já tá entendendo como funciona o game</p>
+                <span class="text-xs text-zinc-500 uppercase">HÁ 10 MINUTOS</span>
+            </div>
+            <div class="px-4 pb-4 pt-1 border-t border-zinc-200">
+                <button id="buildMineNowButton" class="w-full build-mine-now-button-gradient text-white font-semibold py-3 rounded-lg text-sm hover:opacity-90 transition-opacity mt-3">
+                    Quero montar o meu agora
+                </button>
+            </div>
+            <div class="px-4 pb-4 border-t border-zinc-200 pt-4">
+                <div class="space-y-2 text-sm">
+                     <div><span class="font-semibold">thiagofinch</span><svg class="inline-block w-4 h-4 verified-badge" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.707 8.707l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L10 13.586l4.293-4.293a1 1 0 011.414 1.414z"></path></svg><span class="text-zinc-600"> Exatamente! O lead nem percebe que está sendo conduzido. Mas como você aprendeu essa porra muleke?</span></div>
+                    <div><span class="font-semibold">ruyter</span><svg class="inline-block w-4 h-4 verified-badge" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.707 8.707l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L10 13.586l4.293-4.293a1 1 0 011.414 1.414z"></path></svg><span class="text-zinc-600"> Isso é psicologia aplicada no mais alto nível padrão maconheiro</span></div>
+                    <div><span class="font-semibold">jonbenson</span><svg class="inline-block w-4 h-4 verified-badge" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.707 8.707l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L10 13.586l4.293-4.293a1 1 0 011.414 1.414z"></path></svg><span class="text-zinc-600"> This is the essence of persuasion without pushing</span></div>
+                </div>
+                <button class="text-zinc-500 text-sm mt-2">Ver todos os 14 comentários</button>
+            </div>
+        </div>
+    </main>
+
+    <main id="page8" class="page-content container mx-auto px-0 sm:px-4 py-8 max-w-xl">
+        <div class="bg-white border border-zinc-300 rounded-lg">
+            <div class="flex items-center p-4">
+                <img src="https://placehold.co/40x40/6D28D9/FFFFFF?text=MP&font=Inter" alt="Avatar do usuário Marketeiro Pro" class="w-10 h-10 rounded-full mr-3">
+                <span class="font-semibold text-sm">marketeiroPro</span>
+                <button class="ml-auto text-zinc-600"><i class="fas fa-ellipsis-h"></i></button>
+            </div>
+            <div class="content-section-wrapper-pink p-6 sm:p-8 m-4 rounded-lg">
+                <h2 class="content-title content-title-pink" style="font-size: 1.75rem;">Pronto você já entendeu!</h2>
+                <p class="content-paragraph text-center" style="margin-top: 0.5rem; margin-bottom: 0.75rem; color: #4B5563;">Não é curso, nem mais um PDF que vai mofar na merda do seu drive.</p>
+                <p class="content-paragraph text-center" style="margin-bottom: 1.75rem; color: #4B5563;">É gamificação na prática, passo a passo, pronto pra escalar o seu lucro.</p>
+                
+                <ul class="list-none p-0 m-0 space-y-3">
+                    <li class="content-list-item">
+                        <span class="content-list-icon">💡</span>
+                        <span class="content-list-text" style="font-weight: 400;">Você aprende como montar um funil gamificado e agressivo com ChatGPT que aguenta escala</span>
+                    </li>
+                    <li class="content-list-item">
+                        <span class="content-list-icon">📈</span>
+                        <span class="content-list-text" style="font-weight: 400;">Multiplica o ROI mesmo com infoprodutos baratos e simples</span>
+                    </li>
+                    <li class="content-list-item">
+                        <span class="content-list-icon">🎮</span>
+                        <span class="content-list-text" style="font-weight: 400;">Converte leads mais fácil que tirar doce de criança</span>
+                    </li>
+                     <li class="content-list-item">
+                        <span class="content-list-icon">🔒</span>
+                        <span class="content-list-text" style="font-weight: 400;">Vende sem parecer que tá vendendo todos os dias</span>
+                    </li>
+                </ul>
+                <div class="investment-text">
+                    <div class="original-price">De R$59,90</div>
+                    <div class="discounted-price">R$19,90</div>
+                    <div id="offerDateMessage" class="urgency-message"></div>
+                </div>
+            </div>
+
+            <div class="flex justify-between p-4">
+                 <div class="flex space-x-4">
+                    <button class="text-zinc-700"><svg fill="rgb(239 68 68)" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg></button>
+                    <button class="text-zinc-700"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" /></svg></button>
+                    <button class="text-zinc-700"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg></button>
+                </div>
+                <button class="text-zinc-700"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.5 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
+            </div>
+             <div class="px-4 pb-2"><span class="font-semibold text-sm">497 curtidas</span><p class="text-xs text-zinc-500">Curtido por <span class="font-semibold text-zinc-800">thiagofinch</span> e <span class="font-semibold text-zinc-800">outras 7 pessoas</span></p></div>
+            <div class="px-4 pb-4"><p class="text-sm"><span class="font-semibold">marketeiroPro</span> Pronto você já entendeu! Clique no link para acessar...</p><span class="text-xs text-zinc-500 uppercase">HÁ 5 MINUTOS</span></div>
+            <div class="px-4 pb-4 pt-1 border-t border-zinc-200"><button id="unlockAccessButton" class="w-full unlock-access-button-gradient text-white font-semibold py-3 rounded-lg text-sm hover:opacity-90 transition-opacity mt-3"><i class="fas fa-lock-open mr-2"></i>Desbloquear acesso agora!</button></div>
+            <div class="px-4 pb-4 border-t border-zinc-200 pt-4">
+                <div class="space-y-2 text-sm">
+                     <div><span class="font-semibold">thiagofinch</span><svg class="inline-block w-4 h-4 verified-badge" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.707 8.707l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L10 13.586l4.293-4.293a1 1 0 011.414 1.414z"></path></svg><span class="text-zinc-600"> que estrutura absurda kkkk</span></div>
+                    <div><span class="font-semibold">ruyter</span><svg class="inline-block w-4 h-4 verified-badge" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.707 8.707l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L10 13.586l4.293-4.293a1 1 0 011.414 1.414z"></path></svg><span class="text-zinc-600"> vai colar na festinha??</span></div>
+                    <div><span class="font-semibold">jonbenson</span><svg class="inline-block w-4 h-4 verified-badge" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.707 8.707l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L10 13.586l4.293-4.293a1 1 0 011.414 1.414z"></path></svg><span class="text-zinc-600"> At this price point, it's a no-brainer investment</span></div>
+                </div>
+                <button class="text-zinc-500 text-sm mt-2">Ver todos os 31 comentários</button>
+            </div>
+        </div>
+    </main>
+
+    <nav class="bg-white border-t border-zinc-300 fixed bottom-0 left-0 right-0 h-16 flex items-center justify-around sm:hidden z-50">
+        <button class="text-zinc-700"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h7.5" /></svg></button>
+        <button class="text-zinc-700"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z" /></svg></button>
+        <button class="text-zinc-700"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></button>
+        <button class="text-zinc-700"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg></button>
+        <button class="text-zinc-700"><img src="https://placehold.co/28x28/6D28D9/FFFFFF?text=P&font=Inter" alt="Perfil" class="w-7 h-7 rounded-full"></button>
+    </nav>
+    <div class="h-16 sm:hidden"></div>
+
+    <script>
+        const page1 = document.getElementById('page1');
+        const page2 = document.getElementById('page2');
+        const page3 = document.getElementById('page3');
+        const page4 = document.getElementById('page4');
+        const page5 = document.getElementById('page5');
+        const page6 = document.getElementById('page6'); 
+        const page7 = document.getElementById('page7'); 
+        const page8 = document.getElementById('page8'); 
+
+        const startGameButton = document.getElementById('startGameButton');
+        const nextLevelButton = document.getElementById('nextLevelButton');
+        const seeHowItWorksButton = document.getElementById('seeHowItWorksButton');
+        const showRealComparisonButton = document.getElementById('showRealComparisonButton');
+        const showWhatIReceiveButton = document.getElementById('showWhatIReceiveButton');
+        const wantThisNowButton = document.getElementById('wantThisNowButton'); 
+        const buildMineNowButton = document.getElementById('buildMineNowButton'); 
+        const unlockAccessButton = document.getElementById('unlockAccessButton'); 
+        const offerDateMessageElement = document.getElementById('offerDateMessage');
+
+        const balanceDisplay = document.getElementById('balanceDisplay');
+        const toastNotification = document.getElementById('toastNotification');
+        const notificationBadge = document.getElementById('notificationBadge');
+        const dinheiroSoundElement = document.getElementById('dinheiroSound');
+
+        let currentBalance = 0;
+        let notificationCount = 0;
+        const commissionPage1 = 147;
+        const commissionPage2 = 183; 
+        const commissionPage3 = 164; 
+        const commissionPage4 = 122; 
+        const commissionPage5 = 143; 
+        const commissionPage6 = 238; 
+        const commissionPage7 = 0;   
+        const commissionUnlockAccess = 19.90; // Comissão do botão "Desbloquear acesso agora!" na PÁGINA 8
+
+        function formatCurrency(value) {
+            return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        function updateBalanceDisplay() {
+            balanceDisplay.textContent = formatCurrency(currentBalance);
+        }
+
+        function playCashRegisterSound() {
+            if (dinheiroSoundElement) {
+                dinheiroSoundElement.currentTime = 0;
+                dinheiroSoundElement.play().catch(error => {
+                    console.error("Erro ao tocar o som 'dinheiro.mp3':", error);
+                });
+            } else {
+                console.error("Elemento de áudio 'dinheiroSound' não encontrado.");
+            }
+        }
+
+        function showToast(commissionAmount) {
+            if (commissionAmount > 0) { 
+                toastNotification.textContent = `🎉 Nova comissão: +${formatCurrency(commissionAmount)}!`;
+                toastNotification.style.display = 'block';
+                toastNotification.style.animation = 'none';
+                toastNotification.offsetHeight; 
+                toastNotification.style.animation = 'fadeInOut 4s ease-in-out forwards';
+            }
+        }
+
+        function updateNotificationBadge() {
+            if (notificationCount > 0) {
+                notificationBadge.textContent = notificationCount > 9 ? '9+' : notificationCount;
+                notificationBadge.style.display = 'flex';
+            } else {
+                notificationBadge.textContent = '0';
+                notificationBadge.style.display = 'flex';
+            }
+        }
+        
+        function handleSale(commission, nextPageElement, currentPageElement) {
+            if (commission > 0) { 
+                currentBalance += commission;
+                notificationCount++;
+            }
+            updateBalanceDisplay();
+            playCashRegisterSound(); 
+            showToast(commission);
+            updateNotificationBadge();
+            
+            if (currentPageElement) currentPageElement.classList.remove('active');
+            if (nextPageElement) nextPageElement.classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function displayCurrentDate() {
+            if (offerDateMessageElement) {
+                const today = new Date();
+                const day = String(today.getDate()).padStart(2, '0');
+                const month = String(today.getMonth() + 1).padStart(2, '0'); 
+                const year = today.getFullYear();
+                offerDateMessageElement.textContent = `Oferta válida apenas hoje, ${day}/${month}/${year}!`;
+            }
+        }
+
+        if (startGameButton) {
+            startGameButton.addEventListener('click', () => { 
+                handleSale(commissionPage1, page2, page1);
+            });
+        }
+
+        if (nextLevelButton) {
+            nextLevelButton.addEventListener('click', () => {
+                handleSale(commissionPage2, page3, page2);
+            });
+        }
+
+        if (seeHowItWorksButton) { 
+            seeHowItWorksButton.addEventListener('click', () => {
+                handleSale(commissionPage3, page4, page3);
+            });
+        }
+        
+        if (showRealComparisonButton) { 
+            showRealComparisonButton.addEventListener('click', () => {
+                handleSale(commissionPage4, page5, page4);
+            });
+        }
+
+        if (showWhatIReceiveButton) { 
+            showWhatIReceiveButton.addEventListener('click', () => {
+                handleSale(commissionPage5, page6, page5);
+            });
+        }
+        
+        if (wantThisNowButton) { 
+            wantThisNowButton.addEventListener('click', () => {
+                 handleSale(commissionPage6, page7, page6);
+            });
+        }
+
+        if (buildMineNowButton) { 
+            buildMineNowButton.addEventListener('click', () => {
+                 handleSale(commissionPage7, page8, page7); 
+                 displayCurrentDate(); 
+            });
+        }
+
+        if (unlockAccessButton) { 
+            unlockAccessButton.addEventListener('click', () => {
+                // Adiciona a comissão final e atualiza o display ANTES de redirecionar (opcional, mas mantém "saldo subindo")
+                currentBalance += commissionUnlockAccess; 
+                notificationCount++;
+                updateBalanceDisplay();
+                playCashRegisterSound(); 
+                showToast(commissionUnlockAccess);
+                updateNotificationBadge();
+
+                // Aguarda um breve momento para o usuário ver a atualização e o som tocar, depois redireciona
+                setTimeout(() => {
+                    window.location.href = 'https://pay.cakto.com.br/3duurbg_415019';
+                }, 1000); // Atraso de 1 segundo antes de redirecionar
+            });
+        }
+        
+        updateBalanceDisplay();
+        updateNotificationBadge(); 
+        // Chama a função da data uma vez no carregamento para o caso da página 8 ser a ativa (embora não seja o fluxo padrão)
+        if (page8.classList.contains('active')) {
+            displayCurrentDate();
+        }
+    </script>
+</body>
+</html>
+
+
